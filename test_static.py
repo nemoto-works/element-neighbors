@@ -26,7 +26,7 @@ class QuizSmokeTests(unittest.TestCase):
         cls.parsed.feed(cls.source)
 
     def test_required_controls(self):
-        self.assertTrue({"count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
+        self.assertTrue({"mode-exam", "mode-all", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
         self.assertGreaterEqual(self.parsed.buttons, 1)
 
     def test_mobile_viewport(self):
@@ -52,6 +52,16 @@ class QuizSmokeTests(unittest.TestCase):
     def test_answer_is_revealed_after_response(self):
         self.assertIn("renderTable(true)", self.source)
         self.assertIn("answer-cell", self.source)
+
+    def test_two_difficulty_modes(self):
+        self.assertIn("difficulty='exam'", self.source)
+        self.assertIn("function activeQuestions()", self.source)
+        self.assertIn("function setDifficulty(next)", self.source)
+        self.assertIn("q.element.p>=2&&q.element.p<=4", self.source)
+
+    def test_high_contrast_question_and_answer_colors(self):
+        self.assertIn("background:#ffd84d", self.source)
+        self.assertIn("background:#087f5b", self.source)
 
 if __name__ == "__main__":
     unittest.main()
