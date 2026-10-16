@@ -26,7 +26,7 @@ class QuizSmokeTests(unittest.TestCase):
         cls.parsed.feed(cls.source)
 
     def test_required_controls(self):
-        self.assertTrue({"mode-exam", "mode-all", "mode-memory", "memory-card", "memory-sequence", "memory-progress", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
+        self.assertTrue({"mode-exam", "mode-all", "mode-memory", "memory-card", "memory-sequence", "memory-progress", "memory-reset", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
         self.assertGreaterEqual(self.parsed.buttons, 1)
 
     def test_mobile_viewport(self):
@@ -85,6 +85,13 @@ class QuizSmokeTests(unittest.TestCase):
         self.assertIn("localStorage.getItem('element-neighbors-memory')", self.source)
         self.assertIn("function saveMemory()", self.source)
         self.assertIn("saveMemory()", self.source)
+
+    def test_memory_progress_can_be_reset_safely(self):
+        self.assertIn("function resetMemory()", self.source)
+        self.assertIn("confirm('積み上げの進捗を消して、水素からやり直しますか？')", self.source)
+        self.assertIn("localStorage.removeItem('element-neighbors-memory')", self.source)
+        self.assertIn("memoryFrontier=0", self.source)
+        self.assertIn("$('memory-reset').addEventListener('click',resetMemory)", self.source)
 
 if __name__ == "__main__":
     unittest.main()
