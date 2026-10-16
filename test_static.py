@@ -26,7 +26,7 @@ class QuizSmokeTests(unittest.TestCase):
         cls.parsed.feed(cls.source)
 
     def test_required_controls(self):
-        self.assertTrue({"mode-exam", "mode-all", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
+        self.assertTrue({"mode-exam", "mode-all", "mode-memory", "memory-card", "memory-symbol", "memory-progress", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
         self.assertGreaterEqual(self.parsed.buttons, 1)
 
     def test_mobile_viewport(self):
@@ -62,6 +62,20 @@ class QuizSmokeTests(unittest.TestCase):
     def test_high_contrast_question_and_answer_colors(self):
         self.assertIn("background:#ffd84d", self.source)
         self.assertIn("background:#087f5b", self.source)
+
+    def test_stacked_memory_mode(self):
+        self.assertIn("function memoryQuestion()", self.source)
+        self.assertIn("memoryFrontier", self.source)
+        self.assertIn("memoryMastered", self.source)
+        self.assertIn("Math.random()<.35", self.source)
+        self.assertIn("原子番号順", self.source)
+
+    def test_memory_mode_contains_all_118_elements(self):
+        match = re.search(r"const atomicElements=`(.+?)`\.split", self.source)
+        self.assertIsNotNone(match)
+        self.assertEqual(len(match.group(1).split(",")), 118)
+        for item in ("H:水素", "He:ヘリウム", "Li:リチウム", "Og:オガネソン"):
+            self.assertIn(item, match.group(1))
 
 if __name__ == "__main__":
     unittest.main()
