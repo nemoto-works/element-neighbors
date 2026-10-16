@@ -77,5 +77,10 @@ class QuizSmokeTests(unittest.TestCase):
         for item in ("H:水素", "He:ヘリウム", "Li:リチウム", "Og:オガネソン"):
             self.assertIn(item, match.group(1))
 
+    def test_memory_progress_is_persisted(self):
+        self.assertIn("localStorage.getItem('element-neighbors-memory')", self.source)
+        self.assertIn("function saveMemory()", self.source)
+        self.assertIn("saveMemory()", self.source)
+
 if __name__ == "__main__":
     unittest.main()
