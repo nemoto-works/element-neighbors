@@ -26,7 +26,7 @@ class QuizSmokeTests(unittest.TestCase):
         cls.parsed.feed(cls.source)
 
     def test_required_controls(self):
-        self.assertTrue({"mode-exam", "mode-all", "mode-memory", "memory-card", "memory-symbol", "memory-progress", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
+        self.assertTrue({"mode-exam", "mode-all", "mode-memory", "memory-card", "memory-sequence", "memory-progress", "count", "score", "question", "periodic-table", "options", "feedback", "next"} <= self.parsed.ids)
         self.assertGreaterEqual(self.parsed.buttons, 1)
 
     def test_mobile_viewport(self):
@@ -65,6 +65,10 @@ class QuizSmokeTests(unittest.TestCase):
 
     def test_stacked_memory_mode(self):
         self.assertIn("function memoryQuestion()", self.source)
+        self.assertIn("function renderMemorySequence(revealAnswer=false)", self.source)
+        self.assertIn("renderMemorySequence(true)", self.source)
+        self.assertIn("memory-tile '+state", self.source)
+        self.assertIn("revealAnswer?'revealed':'target'", self.source)
         self.assertIn("memoryFrontier", self.source)
         self.assertIn("memoryMastered", self.source)
         self.assertIn("Math.random()<.35", self.source)
